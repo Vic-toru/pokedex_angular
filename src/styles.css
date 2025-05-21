@@ -1,0 +1,42 @@
+/* You can add global styles to this file, and also import other style files */
+@font-face {
+  font-family: 'Pokemon-solid';
+  src: url('/assets/fonts/PokemonSolid.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Pokemon-hollow';
+  src: url('/assets/fonts/PokemonHollow.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+nav , 
+footer {
+  background-color: #dc3545;
+  color: white;
+}
+
+.header-title {
+  font-family: 'Pokemon-solid', sans-serif;
+  color: #ffcc00;
+  -webkit-text-stroke: 3px #1b5cab;
+  font-size: 50px;
+  letter-spacing: 6px;
+}
+
+
+@media (max-width: 1024px) {
+  .col-4 {
+    width: 50%;
+  }
+}
+
+@media (max-width: 682px) {
+  .col-4 {
+    width: 100%;
+  }
+}
+

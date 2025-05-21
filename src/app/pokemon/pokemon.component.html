@@ -1,0 +1,352 @@
+<div class="container-fluid" *ngIf="pokemon; else loading">
+  <div class="pageTitle">
+    <h2>Informations sur {{ pokemon.name.fr }}</h2>
+  </div>
+  <div class="header">
+    <img
+      [src]="isShiny ? pokemon.sprites.shiny : pokemon.sprites.regular"
+      [alt]="pokemon.name.fr"
+    />
+    <h3>#{{ pokemon.pokedex_id }} - {{ pokemon.name.fr }}</h3>
+    <input
+      class="btn btnShiny"
+      (click)="toggleShiny()"
+      [value]="isShiny ? 'Shiny' : 'Classique'"
+      [ngClass]="{ colorNormal: !isShiny, colorShiny: isShiny }"
+    />
+  </div>
+
+  <div style="width: 25rem">
+    <div class="card-header">Information générales</div>
+    <ul class="list-group list-group-flush">
+      <li class="list-group-item">
+        <div class="types">
+          <div
+            *ngFor="let type of pokemon.types"
+            class="elemType align-item-center"
+            [ngStyle]="{ 'background-color': colorType(type.name) }"
+          >
+            <p>
+              {{ type.name }}
+              <img [src]="type.image" [alt]="type.name" />
+            </p>
+          </div>
+        </div>
+      </li>
+      <li class="list-group-item">Catégorie : {{ pokemon.category }}</li>
+      <li class="list-group-item">Taille : {{ pokemon.height }}</li>
+      <li class="list-group-item">Poids : {{ pokemon.weight }}</li>
+      <li class="list-group-item">
+        Taux de capture :
+        {{ (pokemon.catch_rate / maxStat) * 100 | number : "1.2-2" }} %
+      </li>
+    </ul>
+    <div style="width: 25rem">
+      <div class="card-header">Groupe d'oeufs</div>
+      <ul
+        class="list-group list-group-flush"
+        *ngFor="let group of pokemon.egg_groups"
+      >
+        <li class="list-group-item">{{ group }}</li>
+      </ul>
+      <!-- Carte pour Sexe -->
+
+      <div style="width: 25rem">
+        <div class="card-header">Sexe</div>
+        <p class="card-text text-center align-bottom sexTitle">
+          Mâle ♂ / Femelle ♀
+        </p>
+        <div
+          *ngIf="pokemon.sexe; else unknown"
+          class="sexContainer"
+          style="width: 95%; display: flex; height: 20px"
+        >
+          <div
+            [ngStyle]="{
+              'width': pokemon.sexe.male + '%',
+            }"
+            class="maleContainer"
+          >
+            {{ pokemon.sexe.male }}%
+          </div>
+          <div
+            [ngStyle]="{
+              'width': pokemon.sexe.female + '%',
+            }"
+            class="femaleContainer"
+          >
+            {{ pokemon.sexe.female }}%
+          </div>
+        </div>
+        <ng-template #unknown>
+          <div style="text-align: center; height: 20px">Unknown</div>
+        </ng-template>
+      </div>
+    </div>
+  </div>
+
+  <!-- Carte pour Statistiques -->
+  <div style="width: 25rem">
+    <div class="card-header">Base stats</div>
+    <div *ngFor="let stat of pokemon.stats | keyvalue" class="stat-container">
+      <!-- Nom et valeur de la statistique -->
+      <p>{{ stat.key }} : {{ stat.value }}</p>
+      <!-- Jauge de progression -->
+      <div class="progress-bar">
+        <div
+          class="progress"
+          [ngStyle]="{ width: (stat.value / maxStat) * 100 + '%' }"
+        ></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- <div style="width: 100vw">
+  <div *ngIf="pokemon?.evolution?.pre && pokemon.evolution?.pre?.length" style="width: 100vw">
+    <div class="card-header">Pré-évolutions</div>
+    <div *ngFor="let prev of pokemon.evolution?.pre" class="evolution-container">
+      <p>#{{ prev.pokedex_id }} : {{ prev.name }}</p>
+      <img 
+        [src]="'https://raw.githubusercontent.com/Yarkis01/TyraDex/images/sprites/' + prev.pokedex_id + '/regular.png'" 
+        [alt]="prev.name" />
+    </div>
+  </div>
+  <ng-template #noPreEvolution>
+    <p>Aucune pré-évolution.</p>
+  </ng-template>
+</div>
+
+<div style="width: 100vw">
+  <div *ngIf="pokemon?.evolution?.next && pokemon.evolution?.next?.length" style="width: 100vw">
+    <div class="card-header">Évolutions</div>
+    <div *ngFor="let next of pokemon.evolution?.next" class="evolution-container">
+      <p>#{{ next.pokedex_id }} : {{ next.name }} ({{ next.condition }})</p>
+      <img 
+        [src]="'https://raw.githubusercontent.com/Yarkis01/TyraDex/images/sprites/' + next.pokedex_id + '/regular.png'" 
+        [alt]="next.name" />
+    </div>
+  </div>
+  <ng-template #noEvolution>
+    <p>Aucune évolution.</p>
+  </ng-template>
+</div> -->
+    <!-- Section Evolution -->
+
+  <!-- <section style="width: 100vw" class="evolution-container">
+    <div class="card-header">Évolutions</div>
+    <div class="evo-line">
+    <div
+      *ngIf="
+        pokemon?.evolution?.pre?.length || pokemon?.evolution?.next?.length
+      "
+    >
+      <div *ngIf="pokemon?.evolution?.pre && pokemon.evolution?.pre?.length">
+        <div
+          *ngFor="let prev of pokemon.evolution?.pre"
+        >
+        <div class="preEvo">
+                    <p>
+            #{{ prev.pokedex_id }} {{ prev.name }} :
+            <span *ngIf="prev.condition">
+              <strong>{{ prev.condition }}</strong>
+            </span>
+          </p>
+          <img
+            [src]="
+              'https://raw.githubusercontent.com/Yarkis01/TyraDex/images/sprites/' +
+              prev.pokedex_id +
+              '/regular.png'
+            "
+            [alt]="prev.name"
+          />
+        </div>
+
+        </div>
+      </div>
+
+      <div>
+          <p>#{{ pokemon.pokedex_id }} {{ pokemon.name.fr }} :</p>
+          <img
+            [src]="
+              'https://raw.githubusercontent.com/Yarkis01/TyraDex/images/sprites/' +
+              pokemon.pokedex_id +
+              '/regular.png'
+            "
+            [alt]="pokemon.name.fr"
+          />
+        </div>
+      <div *ngIf="pokemon?.evolution?.next && pokemon.evolution?.next?.length">
+        <div
+          *ngFor="let next of pokemon.evolution?.next"
+        >
+          <p>
+            #{{ next.pokedex_id }} : {{ next.name }}
+            <span *ngIf="next.condition"> (Niveau: {{ next.condition }})</span>
+          </p>
+          <img
+            [src]="
+              'https://raw.githubusercontent.com/Yarkis01/TyraDex/images/sprites/' +
+              next.pokedex_id +
+              '/regular.png'
+            "
+            [alt]="next.name"
+          />
+        </div>
+      </div>
+
+
+
+      </div>
+
+
+
+    <div
+      *ngIf="
+        !pokemon?.evolution?.pre?.length && !pokemon?.evolution?.next?.length
+      "
+    >
+      <div class="card-header">Évolution</div>
+      <p>Aucune évolution.</p>
+    </div>
+    </div>
+
+  </section> -->
+
+
+  <section style="width: 100vw" class="evolution-container">
+    <div class="card-header">Évolutions</div>
+  
+    <!-- Si aucune évolution n'existe -->
+    <ng-template #noEvo>
+      <p>Aucune évolution.</p>
+    </ng-template>
+  
+    <!-- Vérification si 'evolution' existe -->
+    <div *ngIf="pokemon.evolution; else noEvo">
+      <div class="evo-line">
+        <!-- Section Pré-évolutions -->
+        <div *ngIf="pokemon.evolution.pre?.length">
+          <h4>Pré-évolutions</h4>
+          <div *ngFor="let pre of pokemon.evolution.pre; let last = last; let i = index">
+            <!-- Affichage des pré-évolutions -->
+            <p>#{{ pre.pokedex_id }} - {{ pre.name }} ({{ pre.condition }})</p>
+            <img
+              [src]="'https://raw.githubusercontent.com/Yarkis01/TyraDex/images/sprites/' + pre.pokedex_id + '/regular.png'"
+              [alt]="pre.name"
+            />
+            <!-- Condition pour passer à l'évolution suivante -->
+            <!-- <p *ngIf="!last" class="evolution-condition">
+              ⚡ Condition pour passer à {{ pokemon.evolution.pre[i + 1]?.name }} : {{ pre.condition }}
+            </p> -->
+          </div>
+        </div>
+  
+        <!-- Pokémon actuel -->
+        <div>
+          <h4>Pokémon actuel</h4>
+          <p>#{{ pokemon.pokedex_id }} - {{ pokemon.name.fr }}</p>
+          <img
+            [src]="'https://raw.githubusercontent.com/Yarkis01/TyraDex/images/sprites/' + pokemon.pokedex_id + '/regular.png'"
+            [alt]="pokemon.name.fr"
+          />
+        </div>
+  
+        <!-- Condition pour passer au stade suivant -->
+        <div *ngIf="pokemon.evolution.next?.length">
+          <!-- <p class="evolution-condition">
+            ⚡ Condition pour évoluer vers : {{ pokemon.evolution.next[0]?.name }} : {{ pokemon.evolution.next[0]?.condition }}
+          </p> -->
+        </div>
+  
+        <!-- Section Évolutions suivantes -->
+        <div *ngIf="pokemon.evolution.next?.length">
+          <h4>Évolutions suivantes</h4>
+          <div *ngFor="let next of pokemon.evolution.next; let last = last; let i = index">
+            <!-- Affichage des évolutions suivantes -->
+            <p>#{{ next.pokedex_id }} - {{ next.name }}</p>
+            <img
+              [src]="'https://raw.githubusercontent.com/Yarkis01/TyraDex/images/sprites/' + next.pokedex_id + '/regular.png'"
+              [alt]="next.name"
+            />
+            <!-- Condition pour passer à l'évolution suivante -->
+            <!-- <p *ngIf="!last" class="evolution-condition">
+              ⚡ Condition pour passer à {{ pokemon.evolution.next[i + 1]?.name }} : {{ next.condition }}
+            </p> -->
+          </div>
+        </div>
+  
+        <!-- Section Méga-évolutions -->
+        <div *ngIf="pokemon.evolution.mega?.length">
+          <h4>Méga-évolutions</h4>
+          <div *ngFor="let mega of pokemon.evolution.mega">
+            <p>Méga-évolution - Orbe: {{ mega.orbe }}</p>
+            <img
+              [src]="mega.sprites.regular"
+              [alt]="'Méga ' + pokemon.name.fr"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  
+  
+
+<!-- Section Evolution -->
+<!-- <section style="width: 100vw" class="evolution-container">
+  <div class="card-header">Évolutions</div>
+  <div class="evo-line">
+    <div *ngIf="pokemon?.evolution?.pre?.length" class="evo-item">
+      <div class="preEvo" *ngFor="let prev of pokemon.evolution?.pre">
+        <div >
+          <p>
+            #{{ prev.pokedex_id }} {{ prev.name }}
+          </p>
+          <img
+            [src]="'https://raw.githubusercontent.com/Yarkis01/TyraDex/images/sprites/' + prev.pokedex_id + '/regular.png'"
+            [alt]="prev.name"
+          />
+        </div>
+        <span class="prevo-cond" *ngIf="prev.condition">
+          <strong>{{ prev.condition }}</strong>
+        </span>
+      </div>
+    </div>
+
+    <div *ngIf="pokemon?.evolution?.pre?.length || pokemon?.evolution?.next?.length" class="evo-item">
+      <p>#{{ pokemon.pokedex_id }} {{ pokemon.name.fr }} :</p>
+      <img
+        [src]="'https://raw.githubusercontent.com/Yarkis01/TyraDex/images/sprites/' + pokemon.pokedex_id + '/regular.png'"
+        [alt]="pokemon.name.fr"
+      />
+    </div>
+
+    <div *ngIf="pokemon?.evolution?.next?.length" class="evo-item">
+      <div class="evo-cond" *ngFor="let next of pokemon.evolution?.next">
+        <span  *ngIf="next.condition">{{ next.condition }}</span>
+        <div>
+                  <p>
+          #{{ next.pokedex_id }} : {{ next.name }}
+        </p>
+        <img
+          [src]="'https://raw.githubusercontent.com/Yarkis01/TyraDex/images/sprites/' + next.pokedex_id + '/regular.png'"
+          [alt]="next.name"
+        />
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="!pokemon?.evolution?.pre?.length && !pokemon?.evolution?.next?.length">
+    <p>Ce Pokémon n'a aucune évolution.</p>
+  </div>
+</section> -->
+</div>
+
+<ng-template #loading>
+  <div class="container">
+    <p>Chargement des informations du Pokémon...</p>
+  </div>
+</ng-template>
