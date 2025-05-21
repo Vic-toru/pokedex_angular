@@ -13,6 +13,7 @@
   font-style: normal;
 }
 
+
 nav , 
 footer {
   background-color: #dc3545;
@@ -23,7 +24,7 @@ footer {
   font-family: 'Pokemon-solid', sans-serif;
   color: #ffcc00;
   -webkit-text-stroke: 3px #1b5cab;
-  font-size: 50px;
+  font-size: 50px;  
   letter-spacing: 6px;
 }
 
@@ -37,6 +38,17 @@ footer {
 @media (max-width: 682px) {
   .col-4 {
     width: 100%;
+  }
+
+}
+
+@media (max-width: 400px) {
+  .header-title {
+      font-family: "Pokemon-solid", sans-serif;
+      color: #ffcc00;
+      -webkit-text-stroke: 3px #1b5cab;
+      font-size: 36px;
+      letter-spacing: 6px;
   }
 }
 

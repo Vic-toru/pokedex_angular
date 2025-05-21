@@ -1,4 +1,4 @@
-<div class="container-fluid" *ngIf="pokemon; else loading">
+<div class="container-fluid poke-page" *ngIf="pokemon; else loading">
   <div class="pageTitle">
     <h2>Informations sur {{ pokemon.name.fr }}</h2>
   </div>
@@ -101,116 +101,28 @@
     </div>
   </div>
 
-  <!-- <div style="width: 100vw">
-  <div *ngIf="pokemon?.evolution?.pre && pokemon.evolution?.pre?.length" style="width: 100vw">
-    <div class="card-header">Pré-évolutions</div>
-    <div *ngFor="let prev of pokemon.evolution?.pre" class="evolution-container">
-      <p>#{{ prev.pokedex_id }} : {{ prev.name }}</p>
-      <img 
-        [src]="'https://raw.githubusercontent.com/Yarkis01/TyraDex/images/sprites/' + prev.pokedex_id + '/regular.png'" 
-        [alt]="prev.name" />
-    </div>
-  </div>
-  <ng-template #noPreEvolution>
-    <p>Aucune pré-évolution.</p>
-  </ng-template>
+<!-- Carte pour Résistances -->
+<div class="" style="width: 100rem">
+  <div class="card-header">Résistances</div>
+
+  <table class="table table-bordered text-center">
+    <thead>
+      <tr>
+        <th *ngFor="let res of pokemon.resistances"
+            [ngStyle]="{ 'background-color': colorType(res.name) }">
+          {{ res.name }}
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td *ngFor="let res of pokemon.resistances">
+          x {{ res.multiplier }}
+        </td>
+      </tr>
+    </tbody>
+  </table>
 </div>
-
-<div style="width: 100vw">
-  <div *ngIf="pokemon?.evolution?.next && pokemon.evolution?.next?.length" style="width: 100vw">
-    <div class="card-header">Évolutions</div>
-    <div *ngFor="let next of pokemon.evolution?.next" class="evolution-container">
-      <p>#{{ next.pokedex_id }} : {{ next.name }} ({{ next.condition }})</p>
-      <img 
-        [src]="'https://raw.githubusercontent.com/Yarkis01/TyraDex/images/sprites/' + next.pokedex_id + '/regular.png'" 
-        [alt]="next.name" />
-    </div>
-  </div>
-  <ng-template #noEvolution>
-    <p>Aucune évolution.</p>
-  </ng-template>
-</div> -->
-    <!-- Section Evolution -->
-
-  <!-- <section style="width: 100vw" class="evolution-container">
-    <div class="card-header">Évolutions</div>
-    <div class="evo-line">
-    <div
-      *ngIf="
-        pokemon?.evolution?.pre?.length || pokemon?.evolution?.next?.length
-      "
-    >
-      <div *ngIf="pokemon?.evolution?.pre && pokemon.evolution?.pre?.length">
-        <div
-          *ngFor="let prev of pokemon.evolution?.pre"
-        >
-        <div class="preEvo">
-                    <p>
-            #{{ prev.pokedex_id }} {{ prev.name }} :
-            <span *ngIf="prev.condition">
-              <strong>{{ prev.condition }}</strong>
-            </span>
-          </p>
-          <img
-            [src]="
-              'https://raw.githubusercontent.com/Yarkis01/TyraDex/images/sprites/' +
-              prev.pokedex_id +
-              '/regular.png'
-            "
-            [alt]="prev.name"
-          />
-        </div>
-
-        </div>
-      </div>
-
-      <div>
-          <p>#{{ pokemon.pokedex_id }} {{ pokemon.name.fr }} :</p>
-          <img
-            [src]="
-              'https://raw.githubusercontent.com/Yarkis01/TyraDex/images/sprites/' +
-              pokemon.pokedex_id +
-              '/regular.png'
-            "
-            [alt]="pokemon.name.fr"
-          />
-        </div>
-      <div *ngIf="pokemon?.evolution?.next && pokemon.evolution?.next?.length">
-        <div
-          *ngFor="let next of pokemon.evolution?.next"
-        >
-          <p>
-            #{{ next.pokedex_id }} : {{ next.name }}
-            <span *ngIf="next.condition"> (Niveau: {{ next.condition }})</span>
-          </p>
-          <img
-            [src]="
-              'https://raw.githubusercontent.com/Yarkis01/TyraDex/images/sprites/' +
-              next.pokedex_id +
-              '/regular.png'
-            "
-            [alt]="next.name"
-          />
-        </div>
-      </div>
-
-
-
-      </div>
-
-
-
-    <div
-      *ngIf="
-        !pokemon?.evolution?.pre?.length && !pokemon?.evolution?.next?.length
-      "
-    >
-      <div class="card-header">Évolution</div>
-      <p>Aucune évolution.</p>
-    </div>
-    </div>
-
-  </section> -->
 
 
   <section style="width: 100vw" class="evolution-container">

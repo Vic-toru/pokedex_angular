@@ -1,4 +1,5 @@
 # pokedex_angular
 
 A Pokédex project developed with Angular
->>>>>>> c58679938748506219b777a8c723536cc2323591
+
+You need to install the dependencies (node_modules) to run the project.
