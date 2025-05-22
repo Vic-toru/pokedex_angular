@@ -1,26 +1,29 @@
 import { Injectable } from '@angular/core';
+import { Observable, of } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
 import { Pokemon } from '../pokeTypes/pokeTypes.component';
+import { tap } from 'rxjs/operators';
 @Injectable({
   providedIn: 'root'
 })
 export class PokemonService {
+  private pokemons: Pokemon[] = [];
+  private apiUrl = 'https://tyradex.vercel.app/api/v1/pokemon';
 
-  async fetchPokemonList(url: string): Promise<Pokemon[]> {
-    try {
-      const response = await fetch(url);
-      if (!response.ok) {
-        throw new Error(`Erreur: ${response.status}`);
-      }
-      const data = await response.json();
-      
-      // Retourner un tableau avec un seul Pokémon (si l'API retourne un objet unique)
-      return Array.isArray(data) ? data : [data];  // Si c'est un objet, on le met dans un tableau
-    } catch (error) {
-      console.error('Erreur lors de la récupération des Pokémons :', error);
-      throw error;
+  constructor(private http: HttpClient) {}
+
+  fetchAll(): Observable<Pokemon[]> {
+    if (this.pokemons.length > 0) {
+      return of(this.pokemons);
+    } else {
+      return this.http.get<Pokemon[]>(this.apiUrl)
+        .pipe(tap(data => this.pokemons = data));
     }
+  }
+
+  getById(id: number): Observable<Pokemon> {
+    return this.http.get<Pokemon>(`${this.apiUrl}/${id}`);
   }
   
 
-  constructor() {}
 }

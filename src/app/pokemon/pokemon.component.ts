@@ -1,18 +1,19 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { PokemonService } from '../services/pokemon.service';
 import { Pokemon } from '../pokeTypes/pokeTypes.component';
 import { CommonModule, KeyValuePipe, NgClass, NgFor, NgIf, NgStyle } from '@angular/common';
 
 @Component({
   selector: 'app-pokemon',
-  imports: [ NgFor, NgIf, NgStyle, NgClass , KeyValuePipe , CommonModule
+  imports: [NgFor, NgIf, NgStyle, NgClass, KeyValuePipe, CommonModule, RouterLink
   ],
   templateUrl: './pokemon.component.html',
   styleUrls: ['./pokemon.component.css'],
 })
 export class PokemonComponent implements OnInit {
-  pokemon: Pokemon | undefined;  
+  // pokemon: Pokemon | undefined;
+  pokemon?: Pokemon;
   isShiny: boolean = false;
   stats: { name: string; value: number }[] = [];
   maxStat: number = 255;
@@ -20,113 +21,93 @@ export class PokemonComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private pokemonService: PokemonService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
-    const id = this.route.snapshot.paramMap.get('id');
-    if (id) {
-      this.loadPokemonDetails(id);
-    }
-  }  
-
-  // async loadPokemonDetails(id: string) {
-  //   try {
-  //     const pokemons = await this.pokemonService.fetchPokemonList(
-  //       `https://tyradex.vercel.app/api/v1/pokemon/${id}`
-  //     );
-  //     console.log('Données récupérées :', pokemons);
-  
-  //     // Si l'API retourne un tableau avec un seul élément, on récupère le premier élément
-  //     if (pokemons && pokemons.length > 0) {
-  //       this.pokemon = pokemons[0];  // Récupérer le premier élément du tableau
-  //     } else {
-  //       console.error('Aucun Pokémon trouvé pour cet ID.');
-  //     }
-  
-  //   } catch (error) {
-  //     console.error('Erreur lors de la récupération des données :', error);
-  //   }
-  // }
-  
-  async loadPokemonDetails(id: string) {
-    try {
-      const pokemons = await this.pokemonService.fetchPokemonList(
-        `https://tyradex.vercel.app/api/v1/pokemon/${id}`
-      );
-      console.log('Données récupérées :', pokemons);
-  
-      if (pokemons && pokemons.length > 0) {
-        this.pokemon = pokemons[0]; // Récupération des données
+    this.route.paramMap.subscribe(params => {
+      const idParam = params.get('id');
+      if (idParam) {
+        const id = +idParam;
+        this.pokemonService.getById(id).subscribe({
+          next: (pokemonData) => {
+            this.pokemon = pokemonData;
+            this.isShiny = false;
+          },
+          error: (err) => {
+            console.error('Erreur lors de la récupération du Pokémon :', err);
+            this.pokemon = undefined;
+          },
+        });
       } else {
-        console.error('Aucun Pokémon trouvé pour cet ID.');
+        console.warn('ID manquant dans l’URL');
+        this.pokemon = undefined;
       }
-    } catch (error) {
-      console.error('Erreur lors de la récupération des données :', error);
-    }
+    });
   }
+
 
   toggleShiny() {
     this.isShiny = !this.isShiny;
   }
 
-  colorType(type:string) :any {
+  colorType(type: string): any {
     switch (type) {
-      case 'Poison': 
+      case 'Poison':
         return '#8F41CB';
         break;
-        case 'Plante': 
+      case 'Plante':
         return '#3FA129';
         break;
-        case 'Acier': 
+      case 'Acier':
         return '#60A1B8';
         break;
-        case 'Feu': 
+      case 'Feu':
         return '#E62829';
         break;
-        case 'Combat': 
+      case 'Combat':
         return '#FF8000';
         break;
-        case 'Dragon': 
+      case 'Dragon':
         return '#5061E1';
         break;
-        case 'Eau': 
+      case 'Eau':
         return '#2980EF';
         break;
-        case 'Fée': 
+      case 'Fée':
         return '#EF71EF';
         break;
-        case 'Glace': 
+      case 'Glace':
         return '#3FD8FF';
         break;
-        case 'Insecte': 
+      case 'Insecte':
         return '#91A119';
         break;
-        case 'Normal': 
+      case 'Normal':
         return '#9FA19F';
         break;
-        case 'Psy': 
+      case 'Psy':
         return '#EF4179';
         break;
-        case 'Roche': 
+      case 'Roche':
         return '#AFA981';
         break;
-        case 'Sol': 
+      case 'Sol':
         return '#915121';
         break;
-        case 'Spectre': 
+      case 'Spectre':
         return '#704170';
         break;
-        case 'Ténèbres': 
-        return '#3FA129';
+      case 'Ténèbres':
+        return '#4f403e';
         break;
-        case 'Vol': 
+      case 'Vol':
         return '#81B9EF';
         break;
-        case 'Électrik': 
+      case 'Électrik':
         return '#FAC000';
         break;
     }
   }
 
-  
+
 }
