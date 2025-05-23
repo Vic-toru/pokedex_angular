@@ -1,6 +1,6 @@
 # This workflow will do a clean installation of node dependencies, cache/restore them, build the source code and run tests across different versions of node
 # For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-nodejs
-name: Node.js CI
+name: Node.js CI & Deploy
 
 on:
   push:
@@ -17,54 +17,63 @@ jobs:
         node-version: [22.x]
 
     steps:
-    - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v4
-      with:
-        node-version: ${{ matrix.node-version }}
-        cache: 'npm'
+      - name: Utiliser Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
 
-    - run: npm ci
+      - name: Installer les dépendances
+        run: npm ci
 
-    - run: npm run build --if-present
+      - name: Compiler le projet
+        run: npm run build --if-present
 
-    - name: Install http-server globally
-      run: npm install -g http-server
+      - name: Lancer le serveur en arrière-plan
+        run: npm install -g http-server && http-server dist/angular_project/browser -p 4200 &
 
-    - name: Serve the app in background
-      run: http-server dist/angular_project/browser -p 4200 &
+      - name: Attendre que l'application soit disponible
+        run: npx wait-on http://127.0.0.1:4200/
 
-    - name: Wait for app to be available
-      run: npx wait-on http://127.0.0.1:4200/
+      - name: Exécuter les tests Cypress
+        run: npx cypress run
 
-    - name: Run Cypress tests
-      run: npx cypress run
+      - name: Sauvegarder le dossier de build
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-dist
+          path: dist/
 
   deploy:
+    needs: build
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+      - name: Récupérer le dépôt
+        uses: actions/checkout@v4
 
-      - name: Install Netlify CLI
+      - name: Télécharger le dossier de build
+        uses: actions/download-artifact@v4
+        with:
+          name: build-dist
+          path: dist/
+
+      - name: Installer Netlify CLI
         run: npm install -g netlify-cli
 
-      - name: Builder
-        run: npm run build --if-present
-  
-      - name: Serve the app in background
-        run: http-server dist/angular_project/browser -p 4200 &
-  
-      - name: Wait for app to be available
+      - name: Lancer le serveur en arrière-plan
+        run: npm install -g http-server && http-server dist/angular_project/browser -p 4200 &
+
+      - name: Attendre que l'application soit disponible
         run: npx wait-on http://127.0.0.1:4200/
-  
-      - name: Run Cypress tests
+
+      - name: Exécuter les tests Cypress
         run: npx cypress run
 
-      - name: Deploy to Netlify
+      - name: Déployer sur Netlify
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
-        run: netlify deploy --prod --dir=dist --site=$NETLIFY_SITE_ID
+        run: netlify deploy --prod --dir=dist/angular_project/browser --site=$NETLIFY_SITE_ID
