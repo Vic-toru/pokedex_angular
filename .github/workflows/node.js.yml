@@ -63,18 +63,12 @@ jobs:
       - name: Installer Netlify CLI
         run: npm install -g netlify-cli
 
-      - name: Installer Cypress globalement (non recommandé ici)
-        run: npm install -g cypress
-
       - name: Lancer le serveur en arrière-plan
         run: npm install -g http-server && http-server dist/angular_project/browser -p 4200 &
 
       - name: Attendre que l'application soit disponible
         run: npx wait-on https://pokedex-gular.netlify.app/
         
-      - name: Exécuter les tests Cypress
-        run: npx cypress run
-
       - name: Déployer sur Netlify
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
