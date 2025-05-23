@@ -49,7 +49,31 @@ jobs:
           name: build-dist
           path: dist/
 
-  deploy:
+  # Déploiement CI/CD via Netlify
+  # deploy:
+  #   needs: build
+  #   runs-on: ubuntu-latest
+
+  #   steps:
+  #     - name: Récupérer le dépôt
+  #       uses: actions/checkout@v4
+
+  #     - name: Télécharger le dossier de build
+  #       uses: actions/download-artifact@v4
+  #       with:
+  #         name: build-dist
+  #         path: dist/
+
+  #     - name: Installer Netlify CLI
+  #       run: npm install -g netlify-cli
+
+  #     - name: Déployer sur Netlify (sans rebuild)
+  #       env:
+  #         NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+  #         NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+  #       run: netlify deploy --prod --dir=dist/angular_project/browser --site=$NETLIFY_SITE_ID --no-build
+
+  deploy: 
     needs: build
     runs-on: ubuntu-latest
 
@@ -62,12 +86,12 @@ jobs:
         with:
           name: build-dist
           path: dist/
-
-      - name: Installer Netlify CLI
-        run: npm install -g netlify-cli
-
-      - name: Déployer sur Netlify (sans rebuild)
-        env:
-          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
-        run: netlify deploy --prod --dir=dist/angular_project/browser --site=$NETLIFY_SITE_ID --no-build
+          
+      - name: 📤 Déployer via FTP
+        uses: sebastianpopp/ftp-action@releases/v2
+        with:
+          host: ${{ secrets.FTP_HOST }}
+          user: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          localDir: ./dist
+          remoteDir: /public_html/victor
