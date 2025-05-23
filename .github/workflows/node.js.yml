@@ -71,6 +71,6 @@ jobs:
         
       - name: Déployer sur Netlify
         env:
-          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+          NETLIFY_AUTH_TOKEN: nfp_g6Fb1Jyh1VwyY1WnFZmnVKtwusHUNBgbeaf0
+          NETLIFY_SITE_ID: 628adf1e-5479-4b8f-a9c5-ec8ddf245f98
         run: netlify deploy --prod --dir=dist/angular_project/browser --site=$NETLIFY_SITE_ID
