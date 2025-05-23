@@ -1,6 +1,6 @@
 # This workflow will do a clean installation of node dependencies, cache/restore them, build the source code and run tests across different versions of node
 # For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-nodejs
-name: Node.js CI & Deploy
+name: Pokédex-Angular CI/CD
 
 on:
   push:
@@ -28,10 +28,13 @@ jobs:
       - name: Installer les dépendances
         run: npm ci
 
-      - name: Compiler le projet
+      - name: Compiler le projet Angular
         run: npm run build --if-present
 
-      - name: Lancer le serveur en arrière-plan
+      - name: Installer Cypress
+        run: npm install --save-dev cypress
+
+      - name: Lancer le serveur local en arrière-plan
         run: npm install -g http-server && http-server dist/angular_project/browser -p 4200 &
 
       - name: Attendre que l'application soit disponible
@@ -63,17 +66,8 @@ jobs:
       - name: Installer Netlify CLI
         run: npm install -g netlify-cli
 
-      - name: Builder
-        run: npm run build
-
-      - name: Lancer le serveur en arrière-plan
-        run: npm install -g http-server && http-server dist/angular_project/browser &
-
-      - name: Attendre que l'application soit disponible
-        run: npx wait-on https://pokedex-gular.netlify.app/
-        
-      - name: Déployer sur Netlify
+      - name: Déployer sur Netlify (sans rebuild)
         env:
-          NETLIFY_AUTH_TOKEN: nfp_g6Fb1Jyh1VwyY1WnFZmnVKtwusHUNBgbeaf0
-          NETLIFY_SITE_ID: 628adf1e-5479-4b8f-a9c5-ec8ddf245f98
-        run: netlify deploy --prod --dir=dist/angular_project/browser --site=$NETLIFY_SITE_ID
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+        run: netlify deploy --prod --dir=dist/angular_project/browser --site=$NETLIFY_SITE_ID --no-build
