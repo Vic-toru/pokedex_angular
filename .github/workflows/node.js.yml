@@ -51,8 +51,17 @@ jobs:
       - name: Install Netlify CLI
         run: npm install -g netlify-cli
 
-      - name: Build site
-        run: npm run build
+      - name: Install http-server globally
+        run: npm install -g http-server
+  
+      - name: Serve the app in background
+        run: http-server dist/angular_project/browser -p 4200 &
+  
+      - name: Wait for app to be available
+        run: npx wait-on http://127.0.0.1:4200/
+  
+      - name: Run Cypress tests
+        run: npx cypress run
 
       - name: Deploy to Netlify
         env:
