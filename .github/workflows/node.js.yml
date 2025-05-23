@@ -51,8 +51,8 @@ jobs:
       - name: Install Netlify CLI
         run: npm install -g netlify-cli
 
-      - name: Install http-server globally
-        run: npm install -g http-server
+      - name: Builder
+        run: npm run build --if-present
   
       - name: Serve the app in background
         run: http-server dist/angular_project/browser -p 4200 &
