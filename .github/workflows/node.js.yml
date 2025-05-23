@@ -64,7 +64,7 @@ jobs:
         run: npm install -g netlify-cli
 
       - name: Lancer le serveur en arrière-plan
-        run: npm install -g http-server && http-server dist/angular_project/browser -p 4200 &
+        run: npm install -g http-server && http-server dist/angular_project/browser &
 
       - name: Attendre que l'application soit disponible
         run: npx wait-on https://pokedex-gular.netlify.app/
