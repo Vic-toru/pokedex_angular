@@ -63,6 +63,9 @@ jobs:
       - name: Installer Netlify CLI
         run: npm install -g netlify-cli
 
+      - name: Installer Cypress globalement (non recommandé ici)
+        run: npm install -g cypress
+
       - name: Lancer le serveur en arrière-plan
         run: npm install -g http-server && http-server dist/angular_project/browser -p 4200 &
 
