@@ -13,7 +13,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "outputPath": "dist/angular_project/browser",
+            "outputPath": "dist/angular_project",
             "index": "src/index.html",
             "browser": "src/main.ts",
             "polyfills": [
@@ -33,7 +33,8 @@
             "scripts": [
               "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"
             ],
-            "baseHref": "/victor"
+            "baseHref": "/victor",
+            "deployUrl": "/victor"
           },
           "configurations": {
             "production": {
