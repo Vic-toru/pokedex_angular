@@ -102,5 +102,5 @@ jobs:
           host: ${{ secrets.FTP_HOST_P }}
           user: ${{ secrets.FTP_USERNAME_P }}
           password: ${{ secrets.FTP_PASSWORD_P }}
-          localDir: ./dist
-          remoteDir: /dist/angular_project/browser
+          localDir: ./dist/angular_project/browser
+          remoteDir: /
