@@ -86,12 +86,21 @@ jobs:
         with:
           name: build-dist
           path: dist/
-          
-      - name: 📤 Déployer via FTP
+
+      # - name: 📤 Déployer via FTP
+      #   uses: sebastianpopp/ftp-action@releases/v2
+      #   with:
+      #     host: ${{ secrets.FTP_HOST }}
+      #     user: ${{ secrets.FTP_USERNAME }}
+      #     password: ${{ secrets.FTP_PASSWORD }}
+      #     localDir: ./dist
+      #     remoteDir: /public_html/victor
+
+      - name: Déployer en FTP
         uses: sebastianpopp/ftp-action@releases/v2
         with:
-          host: ${{ secrets.FTP_HOST }}
-          user: ${{ secrets.FTP_USERNAME }}
-          password: ${{ secrets.FTP_PASSWORD }}
+          host: ${{ secrets.FTP_HOST_P }}
+          user: ${{ secrets.FTP_USERNAME_P }}
+          password: ${{ secrets.FTP_PASSWORD_P }}
           localDir: ./dist
-          remoteDir: /public_html/victor
+          remoteDir: /
