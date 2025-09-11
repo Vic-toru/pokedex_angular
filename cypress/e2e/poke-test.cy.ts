@@ -8,6 +8,7 @@ describe('Test de la poke-list', () => {
       method: 'GET',
       url: 'https://tyradex.vercel.app/api/v1/pokemon',
     });
+    cy.log("L'API Tyranidex est bien fetch");
   });
 
   it('Statut API à 200', () => {
